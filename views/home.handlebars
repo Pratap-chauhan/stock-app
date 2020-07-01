@@ -1,0 +1,55 @@
+{{!-- {{posted_stuff}}<br>
+{{#each stock}}
+   {{!-- {{@key}} | {{this}}<br/> --}}
+{{!-- <div class="jumbotron">
+  <center> 
+  <h1 class="display-4">{{stock.companyName}} ({{stock.symbol}})</h1>
+  
+  <hr class="my-4 text-center">
+  <strong>Latest Price:</strong> ${{stock.latestPrice}}<br/>
+<strong>Previous Close:</strong> ${{stock.previousClose}}<br/>
+<strong>Change Percent:</strong> ${{stock.changePercent}}<br/>
+<strong>Market Cap:</strong> ${{stock.marketCap}}<br/>
+<strong> YTD Change</strong> ${{stock.ytdChange}}<br/>
+<strong> Week 52 High</strong> ${{stock.week52High }}<br/>
+<strong> Week 52 Low</strong> ${{stock.week52Low}}<br/>
+  </center>
+</div>
+
+
+<br><br><br>
+{{/each}} --}}
+
+{{!-- <center>
+
+<br><br> --}}
+
+
+
+
+
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Symbol</th>
+                <th>Real time size</th>
+                <th>Real Time Price</th>
+                <th>week52High</th>
+                <th>week52Low</th>
+            </tr>
+        </thead>
+        <tbody>
+           {{#each stock}}
+            <tr>
+                <td>{{this.companyName}}</td>
+                <td>{{this.symbol}}</td>
+                <td>{{this.iexRealtimeSize}}</td>
+                <td>{{this.iexRealtimePrice}}</td>
+                <td>{{this.week52High}}</td>
+                <td>{{this.week52Low}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+</table>
