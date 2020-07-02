@@ -7,12 +7,10 @@ const bodyParser = require('body-parser');
 const PORT = process.env.port || 5000;
 const mongoose = require('mongoose');
 const user = require('./models/user');
+const cookieParser = require('cookie-parser');
 
-function call_api(finishedAPI, ticker) {
-    console.log("ticker", ticker);
-    const apiURl = `https://cloud.iexapis.com/stable/stock/aapl/quote?types=quote,news,chart&range=1m&last=10&token=sk_8fd87beab2cd4d159d707aaf3406f08e`;
+function fetchData(finishedAPI) {
     const allCollection = 'https://sandbox.iexapis.com/stable/stock/market/collection/list?collectionName=mostactive&token=Tsk_75f8a00ef1ce400a9de5671974e6f490';
-    const apiUrl2 = 'https://cloud.iexapis.com/stable/stock/' + ticker + '/quote?token=pk_edf9c45a75ee47508c5c15bbe63572e4';
     request(allCollection, { json: true }, (err, res, body) => {
         if (err) { console.log(err); }
         if (res.statusCode === 200) {
@@ -24,7 +22,7 @@ function call_api(finishedAPI, ticker) {
 //using body-parser middleware
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(cookieParser());
 app.use(bodyParser.json())
 
 var hbs = exphbs.create({
@@ -60,14 +58,18 @@ app.use('/js' ,express.static(path.join(__dirname, 'js')));
 app.listen(PORT, () => console.log('Server Listeningon port' + PORT))
 
 function stockData(req, res) {
-    var scripts = [{ 
+    const userName = req.cookies.username;
+    const userId = req.cookies.userId;
+    const scripts = [{ 
         script: '/js/login.js' , 
         script: '/js/stockFile.js'  
     }];
-    call_api(function (doneAPI) {
+    fetchData(function (data) {
     res.render('home', {
-        stock: doneAPI,
-        scripts:  scripts
+        stock: data,
+        scripts:  scripts,
+        userName: userName,
+        userId : userId
     });
 });
 }
@@ -75,6 +77,7 @@ function stockData(req, res) {
 app.get('/stock' , function(req, res) {
     stockData(req , res)
 });
+
 // Setting Handlebars GET route
 app.get('/', function (req, res) {
     var scripts = [{ 
@@ -98,6 +101,8 @@ app.post('/auth', function (req, res) {
     if (email && password) {
        user.findOne({email}, (err , data)=>{
         if(data && data.comparePassword(password)) {
+            res.cookie('username' , data.name);
+            res.cookie('userId' , Math.floor(Math.random() * (1000 - 10 + 1) + 10));
             res.json({
                 status: 200,
                 data,
@@ -121,28 +126,33 @@ app.post('/auth', function (req, res) {
 
 app.post('/createUser', function (req, res) {
     const { email ,  password , name} = req.body;
-    // console.log(body);
     if (email && password) {
         user.create({email , password , name} , (err , data)=>{
-            console.log("data" , data , err);
+            if(!err) {
             res.json({
-                status: 200
+                status: 200,
+                data
             });
+        } else {
+            res.json({
+                status: 500,
+                data : err
+            });
+        }
         });
     } else {
         res.json({
-            status: 500
+            status: 500,
+            message : 'Intenal error'
         }); 
     }
 });
 
 // Setting Handlebars POST route
 app.post('/', function (req, res) {
-    call_api(function (doneAPI) {
-        // posted_stuff=req.body.stock_ticker;
+    fetchData(function (data) {
         res.render('home', {
-            stock: doneAPI,
-
+            stock: data,
         });
     }, req.body.stock_ticker);
 
