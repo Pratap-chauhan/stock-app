@@ -40,16 +40,19 @@
                 <th>week52Low</th>
             </tr>
         </thead>
-        <tbody>
-           {{#each stock}}
-            <tr>
-                <td>{{this.companyName}}</td>
+        <tbody id="stocks">
+           {{!-- {{#each stock}} --}}
+            {{!-- <tr>
+                <td onclick="login()">{{this.companyName}}</td>
                 <td>{{this.symbol}}</td>
                 <td>{{this.iexRealtimeSize}}</td>
                 <td>{{this.iexRealtimePrice}}</td>
                 <td>{{this.week52High}}</td>
                 <td>{{this.week52Low}}</td>
-            </tr>
-            {{/each}}
+            </tr> --}}
+            {{!-- {{/each}} --}}
             </tbody>
 </table>
+{{!-- {{#each scripts}}
+  <script src="{{script}}"></script>
+{{/each}} --}}
