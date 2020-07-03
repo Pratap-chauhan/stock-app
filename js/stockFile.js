@@ -11,6 +11,17 @@ function createTable (data) {
       const csymbol = document.createTextNode(data[i].symbol);
       std.appendChild(csymbol);
       tr.appendChild(std);
+
+      const petd = document.createElement('td');
+      const pesymbol = document.createTextNode(data[i].peRatio);
+      petd.appendChild(pesymbol);
+      tr.appendChild(petd);
+
+      const changetd = document.createElement('td');
+      const changesymbol = document.createTextNode(data[i].change);
+      changetd.appendChild(changesymbol);
+      tr.appendChild(changetd);
+
       const rstd = document.createElement('td');
       const iexRealtimeSize = document.createTextNode(data[i].iexRealtimeSize);
       rstd.appendChild(iexRealtimeSize);

@@ -22,7 +22,7 @@
           password
         })
        };
-      fetch('http://ec2-3-81-76-73.compute-1.amazonaws.com:5000/auth' , obj).then(res => res.json()).then((item)=>{
+      fetch('http://localhost:5000/auth' , obj).then(res => res.json()).then((item)=>{
         console.log("item" , item);
         if(item.status === 200) {
           window.location.href = '/stock';
@@ -52,12 +52,12 @@
         name
       })
      };
-    fetch('http://ec2-3-81-76-73.compute-1.amazonaws.com:5000/createUser' , obj).then(res => res.json()).then((item)=>{
+    fetch('http://localhost:5000/createUser' , obj).then(res => res.json()).then((item)=>{
       console.log("item" , item);
       if(item.status === 200) {
         window.location.href = '/stock';
       }else {
-	showError(item.message)
+	        showError(item.message)
       }
     }).catch((e)=>{
 	    showError(e.message)

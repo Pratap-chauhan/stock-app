@@ -128,12 +128,23 @@ app.post('/createUser', function (req, res) {
     const { email ,  password , name} = req.body;
     if (email && password) {
         user.create({email , password , name} , (err , data)=>{
+            console.log("data" , JSON.stringify(data));
+            res.cookie('username' , data.name);
+            res.cookie('userId' , Math.floor(Math.random() * (1000 - 10 + 1) + 10));
             if(!err) {
             res.json({
                 status: 200,
-                data
+                data,
             });
         } else {
+            const {code} =err;
+            if(code === 11000) {
+                res.json({
+                    status : 403 ,
+                    message : 'Email exists'
+                });
+                return;
+            } 
             res.json({
                 status: 500,
                 data : err
@@ -143,7 +154,7 @@ app.post('/createUser', function (req, res) {
     } else {
         res.json({
             status: 500,
-            message : 'Intenal error'
+            message : 'Email and password are mandatory field'
         }); 
     }
 });
