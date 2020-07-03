@@ -1,10 +1,18 @@
-
+ function showError(msg) {
+      const errorMessage = document.getElementById('error');
+      errorMessage.innerText = '';
+      errorMessage.innerText = msg;
+    }
 
     function login() {
          const email = document.getElementById('email').value;
        const password = document.getElementById('password').value;
        console.log({email , password});
-       const obj = {
+       if(!email || !password) {
+        showError('Email and password are mandatory field');
+        return;
+       }
+	const obj = {
         method : 'POST' , 
         headers: {
           'Content-Type': 'application/json'
@@ -14,22 +22,25 @@
           password
         })
        };
-      fetch('http://localhost:5000/auth' , obj).then(res => res.json()).then((item)=>{
+      fetch('http://ec2-3-81-76-73.compute-1.amazonaws.com:5000/auth' , obj).then(res => res.json()).then((item)=>{
         console.log("item" , item);
         if(item.status === 200) {
           window.location.href = '/stock';
         } else {
-          const errorMessage = document.getElementById('error');
-          errorMessage.append(item.message);
+          showError(item.message);
         }
       }).catch((e)=>{
-        console.log(e);
+        showError(e.message)
       });
    }
    function signUp() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const name = document.getElementById('name').value;
+    if(!name || !email || !password) {
+      showError('Name , email and password are mandatory');
+      return;
+    };
     const obj = {
       method : 'POST' , 
       headers: {
@@ -41,12 +52,15 @@
         name
       })
      };
-    fetch('http://localhost:5000/createUser' , obj).then(res => res.json()).then((item)=>{
+    fetch('http://ec2-3-81-76-73.compute-1.amazonaws.com:5000/createUser' , obj).then(res => res.json()).then((item)=>{
       console.log("item" , item);
-      if(item.status) {
+      if(item.status === 200) {
         window.location.href = '/stock';
+      }else {
+	showError(item.message)
       }
     }).catch((e)=>{
+	    showError(e.message)
       console.log(e);
     });
   }
